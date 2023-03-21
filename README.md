@@ -1,22 +1,10 @@
 # phat-trien-phan-mem-phan-tan
 Phát triển phần mềm phân tán
  
-Nhóm sinh viên: 
-1. Phạm Đức Long - 20187182
-2. Nguyễn Thị Mai Hương - 20187170
-3. Đặng Văn Dũng - 20187163
 
-# [Thành viên trong nhóm]
-Stt | Họ tên | MSSV 
---- | --- | ---
-1 | Phạm Đức Long | 20187182 
-2 | Nguyễn Thị Mai Hương | 20187170 
-3 | Đặng Văn Dũng | 20187163 
 ​
 
-![image](https://user-images.githubusercontent.com/71415818/203215760-1c43953c-0871-4dd4-a500-02f866e7c4c8.png)
 
-# [Cài đặt]
 
 Giới thiệu công nghệ
 
