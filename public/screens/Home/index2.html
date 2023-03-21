@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GrabBike</title>
+    <link rel="icon" href="data:image/x-icon;," type="image/x-icon">
+    <link rel="shortcut icon" type="image/png" href="../image/faviconShortCutIcon.png" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link href="../../styles/styles.css" rel='stylesheet' type="text/css">
+    <link href="../../styles/normalize.css" rel='stylesheet' type="text/css">
+    <!-- mapbox -->
+    <script
+        src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.js'></script>
+    <link rel='stylesheet'
+        href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.css'
+        type='text/css' />
+</head>
+
+<body>
+    <div class="mapHome">
+        <div class="column left" style="background-color:FFFFFF;">
+            <div id='map' style='width: 750px; height: 500px;'></div>
+            <script>
+                mapboxgl.accessToken = 'pk.eyJ1IjoibWl0dG9rIiwiYSI6ImNrMTh3YTV5dTAxY3QzaG81dmd5NzJ6NmIifQ.DucIAMARJZ-3qUW9iuCPZQ';
+                var map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v11'
+                });
+            </script>
+        </div>
+        <div class="mapInfo col-sm-12">
+            <div id="map" class="ui-widget-content"></div>
+            <div id="zoomMap">
+                <a onclick="zoomMap()" class="btn btn-sm btn-info"><i class="fa fa-search-plus"></i> <b>PHÓNG TO</b></a>
+                <a onclick="Direction()" class="btn btn-sm btn-info DirectionOpenClose1"><b>CHỈ ĐƯỜNG</b></a>
+            </div>
+            <div id="zoomInMap">
+                <a onclick="zoomInMap()" class="btn btn-sm btn-info"><i class="fa fa-search-minus"></i> <b>THU
+                        NHỎ</b></a>
+                <a onclick="Direction()" class="btn btn-sm btn-info DirectionOpenClose2"><b>CHỈ ĐƯỜNG</b></a>
+            </div>
+            <div id="mapCurrentPosition">
+                <a onclick="getLocation()" class="btn btn-sm btn-success"><b>LẤY VỊ TRÍ HIỆN TẠI</b></a>
+            </div>
+        </div>
+        <!-- <div class="mapItem col-sm-6">
+            <div class="" style="margin-top: 15px;margin-bottom: 20px; margin-left: 15px;display: flex;">
+                <img src="/image/favicon.png"
+                    style="height: 40px; border-radius: 50%; box-shadow: 1px 1px 1px 1px #888888;">
+                <span style="
+                font-size: 20px;
+                font-weight: bold;
+                margin-left: 30px;
+                background-color: #bdbdbd;
+                padding-top: 8px;
+                padding-bottom: 8px;
+                padding-left: 10px;
+                padding-right: 10px;
+                margin-top: 0px;
+                border-top-width: 10px;
+                color: white;
+                border-radius: 15px;box-shadow: 1px 1px 1px 1px #888888;
+            " id="moneyArea">0 VND</span>
+            </div>
+            <div id="mapCurrentPosition2" class="col-sm-6">
+                <a onclick="getLocation()" class="btn btn-sm btn-success"><b>LẤY VỊ TRÍ HIỆN TẠI</b></a>
+            </div>
+            <div id="InputLocation" class="col-sm-6">
+                <a onclick="getInputLocation()" class="btn btn-sm btn-success"><b>TÌM ĐỊA ĐIỂM</b></a>
+            </div>
+            <div id="LocationDirectionGuest" class="col-sm-6">
+                <a onclick="getLocationDirectionGuest()" class="btn btn-sm btn-success"><b>LẤY LỘ TRÌNH ĐƯỜNG ĐI</b></a>
+            </div>
+            <div id="CallDriver" class="col-sm-6">
+                <a onclick="findDriver()" class="btn btn-sm btn-success"><b>TÌM LÁI XE</b></a>
+            </div>
+            <div class="mapItemTab col-sm-12">
+                <div class="mapItemTab1">
+                    <div class="col-sm-6">
+                        <h5><b style="text-decoration: underline;">LỘ TRÌNH CHUYẾN ĐI:</b></h5>
+                        <div id="LoTrinhChuyenDi"><span style='font-size: 25px;'>0km 0min</span></div>
+                    </div>
+                    <div class="col-sm-6">
+                        <h5><b style="text-decoration: underline;" id="mapItemtab1MoneyName">SỐ TIỀN PHẢI TRẢ:</b></h5>
+                        <div id="TienDi"><span>đ</span> <span style='font-size: 25px;'>0</span></div>
+                    </div>
+                </div>
+                <div class="mapItemTab2"></div>
+            </div>
+            <div id="driverGenerator" class="col-sm-12">
+            </div>
+            <div id="driverPickerAreaInfo" class="col-sm-12">
+            </div>
+            <div id="settingLayerButton">
+                <a onclick="openSettingLayerButton()" id="openSetting"><img src="/image/settings.png"
+                        alt="settingbutton" class="settingbutton" style="height: 30px; width: 30px;"></a>
+                <a onclick="closeSettingLayerButton()" id="closeSetting"><img src="/image/settings.png"
+                        alt="settingbutton" class="settingbutton" style="height: 30px; width: 30px;"></a>
+            </div>
+            <div id='menu'>
+                <input id='streets-v11' type='radio' name='rtoggle' value='streets'>
+                <label for='streets'><b>ĐƯỜNG PHỐ</b></label>
+                <input id='light-v10' type='radio' name='rtoggle' value='light'>
+                <label for='light'><b>SÁNG</b></label>
+                <input id='dark-v10' type='radio' name='rtoggle' value='dark'>
+                <label for='dark'><b>TỐI</b></label>
+                <input id='outdoors-v11' type='radio' name='rtoggle' value='outdoors'>
+                <label for='outdoors'><b>NGOÀI TRỜI</b></label>
+                <input id='satellite-v9' type='radio' name='rtoggle' value='satellite'>
+                <label for='satellite'><b>VỆ TINH</b></label>
+            </div>
+        </div>
+        <div class="navBarArea">
+            <div id="openNavBar">
+                <a onclick="openNavBar()" id="openNavBarId"><img src="/image/two-left-arrows.png" alt="settingbutton"
+                        class="openNavBarImg" style="height: 30px; width: 30px;"></a>
+            </div>
+            <div id="closeNavBar">
+                <div class="navBarItem">
+                    <a onclick="closeNavBar()" id="closeNavBarId"><img src="/image/arrow-point-to-right.png"
+                            alt="settingbutton" class="closeNavBarImg" style="height: 30px; width: 30px;"></a>
+                    <div id="isLogin">
+                        <img src="/image/favicon.png">
+                        <div class="userName">
+                            <h3><b>Huster</b></h3>
+                        </div>
+                        <div class="userDetail"><span class="glyphicon glyphicon-user" style="font-size: 14px;"></span>
+                            Thông tin tài khoản</div>
+                        <div class="historyRoute">
+                            <a data-toggle="modal" data-target="#myModalHistoryRoute" onclick="OpenHistoryRoute()">
+                                <span class="glyphicon glyphicon-road" style="font-size: 14px;"></span> Lịch sử chuyến
+                                đi </a>
+                        </div>
+                        <div class="walletHistory">
+                            <a data-toggle="modal" data-target="#myModalWallet" onclick="OpenWallet()">
+                                <span class="glyphicon glyphicon-usd" style="font-size: 14px;"></span> Ví của bạn </a>
+                        </div>
+                        <div class="settingDetail"><span class="glyphicon glyphicon-asterisk"
+                                style="font-size: 14px;"></span> Cài đặt</div>
+                        <div class="logOutDetail" id="logOut" onclick="logOut()"><span class="glyphicon glyphicon-off"
+                                style="font-size: 14px;"></span>
+                            <b>Đăng xuất</b>
+                        </div>
+                    </div>
+                    <!-- <div id="isLoginDriver">
+                        <img src="/image/favicon.png">
+                        <div class="userName">
+                            <h3><b>Huster</b></h3>
+                        </div>
+                        <div class="userDetail"><span class="glyphicon glyphicon-user" style="font-size: 14px;"></span>
+                            Thông tin tài khoản</div>
+                        <div class="historyDriveRoute">
+                            <a data-toggle="modal" data-target="#myModalHistoryRoute" onclick="OpenHistoryRoute()">
+                                <span class="glyphicon glyphicon-road" style="font-size: 14px;"></span> Lịch sử chở
+                                khách </a>
+                        </div>
+                        <div class="walletHistory">
+                            <a data-toggle="modal" data-target="#myModalWallet" onclick="OpenWallet()">
+                                <span class="glyphicon glyphicon-usd" style="font-size: 14px;"></span> Ví của bạn </a>
+                        </div>
+                        <div class="settingDetail"><span class="glyphicon glyphicon-asterisk"
+                                style="font-size: 14px;"></span> Cài đặt</div>
+                        <div class="logOutDetail" id="logOut" onclick="logOut()"><span class="glyphicon glyphicon-off"
+                                style="font-size: 14px;"></span>
+                            <b>Đăng xuất</b>
+                        </div>
+                    </div>
+                    <div id="isNotLogin">
+                        <div class="logInDetail">
+                            <a data-toggle="modal" data-target="#myModalLogin">
+                                <span class="glyphicon glyphicon-off" style="font-size: 14px;"></span>
+                                <b>Đăng nhập</b></a>
+                        </div>
+                        <div class="registerDetail">
+                            <a data-toggle="modal" data-target="#myModalRegister">
+                                <span class="glyphicon glyphicon-off" style="font-size: 14px;"></span>
+                                <b>Đăng ký</b>
+                            </a>
+                        </div>
+                    </div> -->
+    </div>
+    </div>
+    </div> --> </div>
+    <!-- <div id="waringAlert">
+    </div>
+    <div id="successAlert">
+    </div> -->
+    <!-- Login Modal -->
+    <!-- <div class="modal fade" id="myModalLogin" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">ĐĂNG NHẬP TÀI KHOẢN</h4>
+                    <button type="button" class="close" data-dismiss="modal" style="margin-top: -9px;">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h4>Só điện thoại<span style="color: red;"> *</span></h4>
+                    <input type="text" name="phonenumber" placeholder="phonenumber" class="form-group" id="PhonenumberLogin"
+                        required></input>
+                    <h4>Mật khẩu<span style="color: red;"> *</span></h4>
+                    <input type="password" name="Password" placeholder="Mật khẩu" class="form-group" id="PasswordLogin"
+                        required></input>
+                    <input type="checkbox" name="RememberMe" value="RememberMe" style="width: 3%;"> Ghi nhớ đăng
+                    nhập!<br>
+                    <div class="clearBoth"></div>
+                    <div class="login">
+                        <button class="btn btn-default" id="login-button">Đăng nhập</button><br>
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                </div> -->
+    </div>
+    </div>
+    </div> -->
+    <!-- Register Modal -->
+    <!-- <div class="modal fade" id="myModalRegister" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">ĐĂNG KÝ TÀI KHOẢN</h4>
+                    <button type="button" class="close" data-dismiss="modal" style="margin-top: -9px;">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h4>Email<span style="color: red;"> *</span></h4>
+                    <input type="email" name="Email" placeholder="Email" class="form-group" id="EmailRegister"
+                        required></input>
+                    <h4>Họ và tên<span style="color: red;"> *</span></h4>
+                    <input type="text" name="username" placeholder="Họ và tên" class="form-group" id="usernameRegister"
+                        required></input>
+                    <h4>Mật khẩu<span style="color: red;"> *</span></h4>
+                    <input type="password" name="Password" placeholder="Mật khẩu" class="form-group"
+                        id="PasswordREgister" required></input>
+                    <h4>Số điện thoại<span style="color: red;"> *</span></h4>
+                    <input type="text" name="Phone" placeholder="Số điện thoại" class="form-group" id="PhoneRegister"
+                        required></input>
+                    <select id="UserTypeRegister" onchange="ChoseUserType()">
+                        <option value="-1">-- Chọn loại tài khoản --</option>
+                        <option value="Customer">Người dùng hệ thống</option>
+                        <option value="Driver">Lái xe</option>
+                    </select>
+                    <div class="clearBoth"></div>
+                    <h4 id="BikeLicensePlaceText">Biển số xe<span style="color: red;"> *</span></h4>
+                    <input type="text" name="BikeLicensePlace" placeholder="Biển số xe" class="form-group"
+                        id="BikeLicensePlaceRegister" required></input>
+                    <div class="register">
+                        <button class="btn btn-default" id="register-button">Đăng ký</button><br>
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                </div> -->
+    </div>
+    </div>
+    </div> -->
+    <!-- Register Modal -->
+    <!-- <div class="modal fade" id="myModalHistoryRoute" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Lịch sử chuyến đi</h4>
+                    <button type="button" class="close" data-dismiss="modal" style="margin-top: -9px;">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="maphistoryroute"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalWallet" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Ví của bạn</h4>
+                    <button type="button" class="close" data-dismiss="modal" style="margin-top: -9px;">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="mapwallet"></div>
+                    <div class="clearBoth"></div>
+                    <h4 id="BikeLicensePlaceText">Nạp thêm tiền</h4>
+                    <input type="number" name="inputMoney" placeholder="Nhập số tiền" class="form-group" id="inputMoney"
+                        required></input>
+                    <div class="napTienBtn">
+                        <button class="btn btn-default" id="naptien-button">Nạp tiền</button><br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <!-- <div class="ChatBox"> -->
+    <!-- <section>
+        <div id="change_username">
+            <input id="username" type="text" />
+            <button id="send_username" type="button">Change username</button>
+        </div>
+    </section> -->
+    <!-- <section id="chatroom">
+            <section id="feedback"></section>
+        </section>
+        <section id="input_zone">
+            <input id="message" class="vertical-align" type="text" />
+            <button id="send_message" class="vertical-align" type="button">Gửi tin nhắn</button> -->
+    <!-- <button id="close_message" class="vertical-align" type="button">Đóng</button> -->
+    <!-- </section>
+    </div> -->
+    <!-- <div id="close_message" style="cursor: pointer;  
+        background-color: white;
+        position: absolute;
+        left: 52%;
+        bottom: 3%;
+        padding-bottom: 5px;
+        padding-top: 5px;
+        border-radius: 50%;">
+        <a id="closemessage"><img src="/image/speech-bubble.png" alt="closemessage" class="closemessage"
+                style="height: 30px; width: 30px;"></a>
+    </div> -->
+    <!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="../HomeArea/home.js"></script>
+    <script src="../Common/Common.js"></script> -->
+    <h1><strong>HOME SCREEN</strong></h1>
+    <script src="../api/axiosClient.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>
